@@ -5,12 +5,15 @@
 
 #include <cpu.h>
 
-START_TEST(test_nothing) {
+START_TEST(test_nothing)
+{
     bool b = cpu_step();
     ck_assert_uint_eq(b, false);
-} END_TEST
+}
+END_TEST
 
-Suite *stack_suite() {
+Suite *stack_suite()
+{
     Suite *s = suite_create("emu");
     TCase *tc = tcase_create("core");
 
@@ -20,7 +23,8 @@ Suite *stack_suite() {
     return s;
 }
 
-int main() {
+int main()
+{
     Suite *s = stack_suite();
     SRunner *sr = srunner_create(s);
     srunner_run_all(sr, CK_NORMAL);
@@ -30,4 +34,3 @@ int main() {
 
     return nf == 0 ? 0 : -1;
 }
-
