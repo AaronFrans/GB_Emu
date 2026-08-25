@@ -1,6 +1,6 @@
 project(gbemu C)
 
-cmake_minimum_required(VERSION 2.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 ###############################################################################
@@ -88,10 +88,15 @@ set(CONFIG_HEADER ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 # Subdirectories
 add_subdirectory(lib)
 add_subdirectory(gbemu)
-add_subdirectory(tests)
 
-###############################################################################
-# Unit tests
-enable_testing()
-add_test(NAME check_gbe COMMAND check_gbe)
+# windows_deps/check/check.lib is prebuilt 32-bit only, so the check_gbe
+# test target can't link on a 64-bit Windows build.
+if(NOT (WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8))
+  add_subdirectory(tests)
+
+  ###############################################################################
+  # Unit tests
+  enable_testing()
+  add_test(NAME check_gbe COMMAND check_gbe)
+endif()
 
