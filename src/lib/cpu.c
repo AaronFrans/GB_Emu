@@ -7,18 +7,13 @@ cpu_context ctx = {0};
 void cpu_init()
 {
     ctx.regs.pc = 0x100;
+    ctx.regs.a = 0X01;
 }
 
 void fetch_instruction()
 {
     ctx.cur_opcode = bus_read(ctx.regs.pc++);
     ctx.cur_inst = instruction_by_opcode(ctx.cur_opcode);
-
-    if (ctx.cur_inst == NULL)
-    {
-        printf("Instruction not known (%02X)\n", ctx.cur_opcode);
-        exit(-7);
-    }
 }
 
 void fetch_date()
@@ -26,6 +21,11 @@ void fetch_date()
 
     ctx.mem_dest = 0;
     ctx.dest_is_mem = false;
+
+    if (ctx.cur_inst == NULL)
+    {
+        return;
+    }
 
     switch (ctx.cur_inst->mode)
     {
@@ -53,27 +53,38 @@ void fetch_date()
     }
 
     default:
-        printf("Addressing mode not known (%d)\n", ctx.cur_inst->mode);
+        printf("Addressing mode not known (%d) (%02X)\n", ctx.cur_inst->mode, ctx.cur_opcode);
         exit(-7);
     }
 }
 
 void execute()
 {
-    printf("    Not executing yet... \n");
+    const IN_PROC proc = inst_get_processor(ctx.cur_inst->type);
+
+    if (!proc) {
+        NO_IMPL
+    }
+
+    proc (&ctx);
 }
 
 bool cpu_step()
 {
-
-    printf("CPU Halted: %d\n", ctx.halted);
     if (!ctx.halted)
     {
-        u16 pc = ctx.regs.pc;
+        const u16 pc = ctx.regs.pc;
         fetch_instruction();
         fetch_date();
 
-        printf("Executing Instruction: %02X   PC: %04X\n", ctx.cur_opcode, pc);
+        printf("%04X: %-7s (%02X %02X %02X) A: %02X B: %02X C: %02X\n",
+            pc, inst_name(ctx.cur_inst->type), ctx.cur_opcode,
+            bus_read(pc + 1), bus_read(pc + 2),
+            ctx.regs.a, ctx.regs.b, ctx.regs.c);
+
+        if (ctx.cur_inst == NULL) {
+            printf("Instruction not known! %02X\n", ctx.cur_opcode);
+        }
 
         execute();
     }

@@ -3,10 +3,16 @@
 #include <common.h>
 #include <instructions.h>
 
+// ------ DEFINES ------
+#define CPU_FLAG_Z BIT(ctx->regs.f, 7)
+#define CPU_FLAG_C BIT(ctx->regs.f, 4)
+
+
+// ------ TYPEDEFS ------
 typedef struct
 {
     u8 a;
-    u8 f;
+    u8 f; // Flags
     u8 b;
     u8 c;
     u8 d;
@@ -30,7 +36,15 @@ typedef struct
 
     bool halted;
     bool stepping;
+
+    bool int_master_enabled;
 } cpu_context;
 
+typedef void (*IN_PROC) (cpu_context *);
+
+
+// ------ FUNCTIONS ------
 void cpu_init();
 bool cpu_step();
+u16 cpu_read_reg(reg_type);
+IN_PROC inst_get_processor(in_type type);

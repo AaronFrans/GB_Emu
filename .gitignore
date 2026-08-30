@@ -1,1 +1,29 @@
 .vscode
+
+# ROMs -----------------------------------------------------------------------
+# Do NOT commit commercial / copyrighted game ROMs (Tetris, Pokemon, etc.).
+# Ignore all ROM images and save files by default...
+*.gb
+*.gbc
+*.sav
+*.rtc
+roms/*.gb
+roms/*.gbc
+
+# ...then whitelist the freely-redistributable test ROMs the project needs.
+# blargg cpu_instrs / instr_timing suite:
+!roms/01-special.gb
+!roms/02-interrupts.gb
+!roms/03-op sp,hl.gb
+!roms/04-op r,imm.gb
+!roms/05-op rp.gb
+!roms/06-ld r,r.gb
+!roms/07-jr,jp,call,ret,rst.gb
+!roms/08-misc instrs.gb
+!roms/09-op r,r.gb
+!roms/10-bit ops.gb
+!roms/11-op a,(hl).gb
+!roms/cpu_instrs.gb
+!roms/mem_timing.gb
+# dmg-acid2 PPU test (Matt Currie, freely redistributable):
+!roms/dmg-acid2.gb
