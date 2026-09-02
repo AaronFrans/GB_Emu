@@ -47,4 +47,6 @@ typedef void (*IN_PROC) (cpu_context *);
 void cpu_init();
 bool cpu_step();
 u16 cpu_read_reg(reg_type);
+void cpu_set_reg(reg_type, u16);
+void fetch_data();
 IN_PROC inst_get_processor(in_type type);
